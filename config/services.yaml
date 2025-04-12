@@ -20,5 +20,15 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Service\CreditService:
+        arguments:
+            $creditRepository: '@App\Repository\CreditRepository'
+
+    App\Controller\CreditController:
+        arguments:
+            $creditService: '@App\Service\CreditService'
+            $serializer: '@Symfony\Component\Serializer\SerializerInterface'
+            $validator: '@Symfony\Component\Validator\Validator\ValidatorInterface'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
