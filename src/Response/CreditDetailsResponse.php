@@ -48,7 +48,7 @@ class CreditDetails
      */
     public function getInterestRate(): float
     {
-        return round($this->interestRate, 2);
+        return round($this->interestRate, 4);
     }
 
     /**

@@ -14,9 +14,9 @@ class CreditService
         return $creditAmount*((($creditInterestRate/$installmentsAmountPerYear)*pow(1+($creditInterestRate/$installmentsAmountPerYear), $installmentsAmount))/(pow(1+($creditInterestRate/$installmentsAmountPerYear), $installmentsAmount)-1));
     }
 
-    public function getLast4(): array
+    public function getLast4(bool $includeDeleted = false): array
     {
-        return $this->creditRepository->getLast4();
+        return $this->creditRepository->getLast4($includeDeleted);
     }
 
     public function delete(int $id): bool

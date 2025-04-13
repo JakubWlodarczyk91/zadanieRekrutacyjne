@@ -39,17 +39,17 @@ final class CreditController extends AbstractController
         $creditResponse = new CreditResponse($credit);
 
         $jsonContent = $this->serializer->serialize($creditResponse, 'json', [
-            'groups' => ['credit', 'creditDetails'],
+            'groups' => ['credit', 'creditDetails', 'schedule'],
             'json_encode_options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
         ]);
 
         return new JsonResponse($jsonContent, 200, [], true);
     }
 
-    #[Route('/credit', name: 'get_credit', methods: ['GET'])]
-    public function get(): JsonResponse
+    #[Route('/credit/{includedDeleted}', name: 'get_credit', methods: ['GET'])]
+    public function get(int $includedDeleted = 0): JsonResponse
     {
-        $last4Credits = $this->creditService->getLast4();
+        $last4Credits = $this->creditService->getLast4($includedDeleted);
 
         $jsonContent = $this->serializer->serialize($last4Credits, 'json', [
             'json_encode_options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE

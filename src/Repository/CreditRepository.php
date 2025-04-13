@@ -16,14 +16,24 @@ class CreditRepository extends ServiceEntityRepository
         parent::__construct($registry, Credit::class);
     }
 
-    public function getLast4(): array
+    public function getLast4(bool $includeDeleted = false): array
     {
-        return $this->createQueryBuilder('c')
+        $em = $this->getEntityManager();
+        $filters = $em->getFilters();
+
+        if ($includeDeleted) {
+            $filters->disable('softdeleteable');
+        }
+
+        $result = $this->createQueryBuilder('c')
             ->orderBy('c.interestAmount', 'DESC')
             ->setMaxResults(4)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+
+        $filters->enable('softdeleteable');
+
+        return $result;
     }
 
     public function save(Credit $credit)

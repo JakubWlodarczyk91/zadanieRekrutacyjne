@@ -24,6 +24,10 @@ class CreditResponse
     #[SerializedName('interestAmount')]
     private float $interestAmount;
 
+    #[Groups(['credit'])]
+    #[SerializedName('schedule')]
+    private array $schedule = [];
+
     public function __construct(public Credit $credit) {
         $this->installment = $credit->getInstallment();
         $this->creditDetails = new CreditDetails(
@@ -34,6 +38,22 @@ class CreditResponse
         );
         $this->totalAmount = $this->credit->getTotalAmount();
         $this->interestAmount = $this->credit->getInterestAmount();
+        $this->generateSchedule();
+    }
+
+    private function generateSchedule(): void
+    {
+        $interestAmountPerInstalment = ($this->getTotalAmount() - $this->creditDetails->getAmount())/$this->creditDetails->getInstallmentsAmount();
+        $capitalAmount = $this->getInstallment() - $interestAmountPerInstalment;
+
+        for ($i = 1; $i <= $this->creditDetails->getInstallmentsAmount(); $i++) {
+            $this->schedule[] = new InstallmentScheduleItemResponse(
+                $i,
+                $this->getInstallment(),
+                round($interestAmountPerInstalment, 2),
+                round($capitalAmount, 2)
+            );
+        }
     }
 
     /**
@@ -66,5 +86,13 @@ class CreditResponse
     public function getInterestAmount(): float
     {
         return round($this->interestAmount, 2);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSchedule(): array
+    {
+        return $this->schedule;
     }
 }
