@@ -7,49 +7,59 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: CreditRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: "deletedAt", timeAware: false, hardDelete: false)]
+#[OA\Schema(schema: "Credit")]
 class Credit
 {
     use SoftDeleteableEntity;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[OA\Property(type: "integer", example: 17)]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $installment = null;
+    #[OA\Property(type: "float", example: 691.66)]
+    private ?float $installment = null;
 
     #[ORM\Column]
+    #[OA\Property(type: "integer", example: 8000)]
     private ?int $amount = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 4)]
-    private ?string $interestRate = null;
+    #[OA\Property(type: "float", example: 0.0685)]
+    private ?float $interestRate = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[OA\Property(type: "integer", example: 12)]
     private ?int $installmentsAmount = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[OA\Property(type: "integer", example: 12)]
     private ?int $installmentsAmountPerYear = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $totalAmount = null;
+    #[OA\Property(type: "float", example: 8299.93)]
+    private ?float $totalAmount = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $interestAmount = null;
+    #[OA\Property(type: "float", example: 299.93)]
+    private ?float $interestAmount = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInstallment(): ?string
+    public function getInstallment(): ?float
     {
         return $this->installment;
     }
 
-    public function setInstallment(string $installment): static
+    public function setInstallment(float $installment): static
     {
         $this->installment = $installment;
 
@@ -68,12 +78,12 @@ class Credit
         return $this;
     }
 
-    public function getInterestRate(): ?string
+    public function getInterestRate(): ?float
     {
         return $this->interestRate;
     }
 
-    public function setInterestRate(string $interestRate): static
+    public function setInterestRate(float $interestRate): static
     {
         $this->interestRate = $interestRate;
 
@@ -104,24 +114,24 @@ class Credit
         return $this;
     }
 
-    public function getTotalAmount(): ?string
+    public function getTotalAmount(): ?float
     {
         return $this->totalAmount;
     }
 
-    public function setTotalAmount(string $totalAmount): static
+    public function setTotalAmount(float $totalAmount): static
     {
         $this->totalAmount = $totalAmount;
 
         return $this;
     }
 
-    public function getInterestAmount(): ?string
+    public function getInterestAmount(): ?float
     {
         return $this->interestAmount;
     }
 
-    public function setInterestAmount(string $interestAmount): static
+    public function setInterestAmount(float $interestAmount): static
     {
         $this->interestAmount = $interestAmount;
 

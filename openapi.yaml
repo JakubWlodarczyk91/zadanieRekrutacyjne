@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: 'Credit API'
+  description: 'Credit API'
+  version: 1.0.0
+paths:
+  /credit:
+    post:
+      operationId: save_credit
+      requestBody:
+        description: 'Credit input data'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditRequest'
+      responses:
+        '200':
+          description: 'Credit data'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditResponse'
+  '/credit/{includedDeleted}':
+    get:
+      operationId: get_credit
+      parameters:
+        -
+          name: includedDeleted
+          in: path
+          description: 'Include deleted credits'
+          required: false
+          schema:
+            type: integer
+            example: 0
+      responses:
+        '200':
+          description: 'Last 4 credits with highest interest amount'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Credit'
+  '/credit/{id}':
+    get:
+      operationId: delete_credit
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Credit id'
+          required: true
+          schema:
+            type: integer
+            example: 17
+      responses:
+        '200':
+          description: 'Credit delete information'
+          content:
+            application/json:
+              schema: {  }
+              example: '{ "success": "Credit deleted" }'
+        '404':
+          description: 'Credit delete information'
+          content:
+            application/json:
+              schema: {  }
+              example: '{ "error": "Credit not found" }'
+components:
+  schemas:
+    Credit:
+      properties:
+        id:
+          type: integer
+          example: 17
+        installment:
+          type: number
+          format: float
+          example: 691.66
+        amount:
+          type: integer
+          example: 8000
+        interestRate:
+          type: number
+          format: float
+          example: 0.0685
+        installmentsAmount:
+          type: integer
+          example: 12
+        installmentsAmountPerYear:
+          type: integer
+          example: 12
+        totalAmount:
+          type: number
+          format: float
+          example: 8299.93
+        interestAmount:
+          type: number
+          format: float
+          example: 299.93
+      type: object
+    CreditRequest:
+      properties:
+        creditAmount:
+          type: number
+          format: float
+          example: 8000
+        creditInterestRate:
+          type: number
+          format: float
+          example: 6.85
+        installmentsAmount:
+          type: integer
+          example: 12
+        installmentsAmountPerYear:
+          type: integer
+          example: 12
+      type: object
+    CreditDetailsResponse:
+      properties:
+        amount:
+          type: number
+          format: float
+          example: 8000
+        interestRate:
+          type: number
+          format: float
+          example: 0.0685
+        installmentsAmount:
+          type: integer
+          example: 12
+        installmentsAmountPerYear:
+          type: integer
+          example: 12
+      type: object
+    CreditResponse:
+      properties:
+        installment:
+          type: number
+          format: float
+          example: 691.66
+        creditDetails:
+          $ref: '#/components/schemas/CreditDetailsResponse'
+        totalAmount:
+          type: number
+          format: float
+          example: 8299.93
+        interestAmount:
+          type: number
+          format: float
+          example: 299.93
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallmentScheduleItemResponse'
+      type: object
+    InstallmentScheduleItemResponse:
+      properties:
+        installmentNumber:
+          type: integer
+          example: 1
+        installment:
+          type: number
+          format: float
+          example: 691.66
+        interestAmountPerInstalment:
+          type: number
+          format: float
+          example: 24.99
+        capitalAmount:
+          type: number
+          format: float
+          example: 666.67
+      type: object

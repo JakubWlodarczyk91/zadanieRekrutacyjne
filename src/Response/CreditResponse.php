@@ -5,32 +5,39 @@ namespace App\Response;
 use App\Entity\Credit;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(schema: "CreditResponse")]
 class CreditResponse
 {
     #[Groups(['credit'])]
     #[SerializedName('installment')]
+    #[OA\Property(type: "float", example: 691.66)]
     private float $installment;
 
     #[Groups(['credit'])]
     #[SerializedName('creditDetails')]
-    private CreditDetails $creditDetails;
+    #[OA\Property(ref: "#/components/schemas/CreditDetailsResponse")]
+    private CreditDetailsResponse $creditDetails;
 
     #[Groups(['credit'])]
     #[SerializedName('totalAmount')]
+    #[OA\Property(type: "float", example: 8299.93)]
     private float $totalAmount;
 
     #[Groups(['credit'])]
     #[SerializedName('interestAmount')]
+    #[OA\Property(type: "float", example: 299.93)]
     private float $interestAmount;
 
     #[Groups(['credit'])]
     #[SerializedName('schedule')]
+    #[OA\Property(type: "array", items: new OA\Items(ref: "#/components/schemas/InstallmentScheduleItemResponse"))]
     private array $schedule = [];
 
     public function __construct(public Credit $credit) {
         $this->installment = $credit->getInstallment();
-        $this->creditDetails = new CreditDetails(
+        $this->creditDetails = new CreditDetailsResponse(
             $this->credit->getAmount(),
             $this->credit->getInterestRate(),
             $this->credit->getInstallmentsAmount(),
@@ -65,9 +72,9 @@ class CreditResponse
     }
 
     /**
-     * @return CreditDetails
+     * @return CreditDetailsResponse
      */
-    public function getCreditDetails(): CreditDetails
+    public function getCreditDetails(): CreditDetailsResponse
     {
         return $this->creditDetails;
     }

@@ -7,7 +7,9 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(schema: "CreditRequest")]
 class CreditRequest
 {
     #[NotBlank]
@@ -15,20 +17,24 @@ class CreditRequest
     #[LessThanOrEqual(value: 12000)]
     #[GreaterThanOrEqual(value: 1000)]
     #[DivisibleBy(value: 500, message: "The credit amount must be divisible by 500.")]
-    protected $creditAmount;
+    #[OA\Property(type: "float", example: 8000)]
+    protected float $creditAmount;
     #[NotBlank]
     #[Type(type: "float")]
-    protected $creditInterestRate;
+    #[OA\Property(type: "float", example: 6.85)]
+    protected float $creditInterestRate;
     #[NotBlank]
     #[Type(type: "int")]
     #[LessThanOrEqual(value: 18)]
     #[GreaterThanOrEqual(value: 3)]
     #[DivisibleBy(value: 3, message: "The installments amount must be divisible by 3.")]
-    protected $installmentsAmount;
+    #[OA\Property(type: "integer", example: 12)]
+    protected int $installmentsAmount;
     #[Type(type: "int")]
     #[LessThanOrEqual(value: 12)]
     #[GreaterThanOrEqual(value: 1)]
-    protected $installmentsAmountPerYear = 12;
+    #[OA\Property(type: "integer", example: 12)]
+    protected int $installmentsAmountPerYear = 12;
 
     /**
      * @return float|null
